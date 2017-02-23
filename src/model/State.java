@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * @author dat13tma, elt13hli
+ *
+ */
 public class State {
 	public static final int EAST = 0;
 	public static final int SOUTH = 1;
@@ -16,10 +20,16 @@ public class State {
 		this.nbrCols = nbrCols;
 	}
 	
+	/**
+	 * @return the current x value
+	 */
 	public int getX(){
 		return x;
 	}
 	
+	/**
+	 * @return the current y value
+	 */
 	public int getY(){
 		return y;
 	}
@@ -33,11 +43,13 @@ public class State {
 	}
 	
 	/**
-	 * Calculates which headings is allowed and returns a list of the headings in order EAST, SOUTH, WEST or NORTH.
+	 * Calculates which headings is allowed and returns a list of the headings 
+	 * in order EAST, SOUTH, WEST or NORTH.
 	 * 
-	 * Assumes not outside grid.
+	 * Assumes the current position is not outside of the grid.
 	 * 
-	 * @return a list containing the heading when allowed and -1 otherwise (the order in the list are EAST, SOUTH, WEST or NORTH)
+	 * @return a list containing the heading when allowed and -1 otherwise 
+	 * 			(the order in the list are EAST, SOUTH, WEST or NORTH)
 	 */
 	public int[] allowedHeadings(){
 		int[] head = new int[4];
@@ -68,10 +80,11 @@ public class State {
 	}
 	
 	/**
-	 * Update the state after taking a step in the direction head if the direction is allowed (no walls in the way)
+	 * Update the state for taking a step in the direction head 
+	 * if the direction is allowed (no walls in the way)
 	 * 
-	 * @param head - the direction the step were taken in (assumes EAST, SOUTH, WEST or NORTH)
-	 * @return true if updated state, false if state could not be updated
+	 * @param head - the direction the step will be taken in (assumes EAST, SOUTH, WEST or NORTH)
+	 * @return true if updated state (step taken), false if state could not be updated
 	 */
 	public boolean updateState(int head){
 		int[] check = allowedHeadings();
