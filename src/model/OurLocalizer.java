@@ -25,9 +25,6 @@ public class OurLocalizer implements EstimatorInterface {
 		this.nbrOfCols = cols;
 		this.nbrOfhead = head;
 		currentState = new State(1, 1, State.EAST, nbrOfRows, nbrOfCols); //start state right now (1,1) heading east
-		
-		
-		
 	}	
 	
 	

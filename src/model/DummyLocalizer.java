@@ -9,8 +9,7 @@ public class DummyLocalizer implements EstimatorInterface {
 	public DummyLocalizer( int rows, int cols, int head) {
 		this.rows = rows;
 		this.cols = cols;
-		this.head = head;
-		
+		this.head = head;		
 	}	
 	
 	public int getNumRows() {
@@ -34,8 +33,7 @@ public class DummyLocalizer implements EstimatorInterface {
 	}
 
 
-	public int[] getCurrentTruePosition() {
-		
+	public int[] getCurrentTruePosition() {		
 		int[] ret = new int[2];
 		ret[0] = rows/2;
 		ret[1] = cols/2;
