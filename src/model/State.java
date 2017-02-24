@@ -114,4 +114,34 @@ public class State {
 		return true;
 	}
 	
+	/**
+	 * Checks if it is allowed to move from this state to the given state.
+	 * 
+	 * @param s - the state to check if allowed to move to
+	 * @return true if allowed to move from here to s
+	 */
+	public boolean allowedMove(State s){
+		if ((x+1 == s.x && y == s.y && s.heading == SOUTH)||(x-1 == s.x && y == s.y && s.heading == NORTH)){
+			return true;
+		}
+		if ((x == s.x && y+1 == s.y && s.heading == EAST)||(x == s.x && y-1 == s.y && s.heading == WEST)){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public String toString(){
+		String head;
+		if (heading == EAST)
+			head = "East";
+		else if (heading == SOUTH)
+			head = "South";
+		else if (heading == WEST)
+			head = "West";
+		else
+			head = "North";
+		return "Coordinates: (" + x + ", " + y + "), heading: " + head;
+	}
+	
 }

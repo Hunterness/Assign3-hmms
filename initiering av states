@@ -1,0 +1,82 @@
+private void makeStates(int nR, int nC){
+		states[0] = new State(0,0,State.EAST,nR,nC);
+		states[1] = new State(0,0,State.SOUTH,nR,nC);
+		states[2] = new State(0,0,State.WEST,nR,nC);
+		states[3] = new State(0,0,State.NORTH,nR,nC);
+		
+		states[4] = new State(0,1,State.EAST,nR,nC);
+		states[5] = new State(0,1,State.SOUTH,nR,nC);
+		states[6] = new State(0,1,State.WEST,nR,nC);
+		states[7] = new State(0,1,State.NORTH,nR,nC);
+		
+		states[8] = new State(0,2,State.EAST,nR,nC);
+		states[9] = new State(0,2,State.SOUTH,nR,nC);
+		states[10] = new State(0,2,State.WEST,nR,nC);
+		states[11] = new State(0,2,State.NORTH,nR,nC);
+		
+		states[12] = new State(0,3,State.EAST,nR,nC);
+		states[13] = new State(0,3,State.SOUTH,nR,nC);
+		states[14] = new State(0,3,State.WEST,nR,nC);
+		states[15] = new State(0,3,State.NORTH,nR,nC);
+		
+		states[16] = new State(1,0,State.EAST,nR,nC);
+		states[17] = new State(1,0,State.SOUTH,nR,nC);
+		states[18] = new State(1,0,State.WEST,nR,nC);
+		states[19] = new State(1,0,State.NORTH,nR,nC);
+		
+		states[20] = new State(1,1,State.EAST,nR,nC);
+		states[21] = new State(1,1,State.SOUTH,nR,nC);
+		states[22] = new State(1,1,State.WEST,nR,nC);
+		states[23] = new State(1,1,State.NORTH,nR,nC);
+		
+		states[24] = new State(1,2,State.EAST,nR,nC);
+		states[25] = new State(1,2,State.SOUTH,nR,nC);
+		states[26] = new State(1,2,State.WEST,nR,nC);
+		states[27] = new State(1,2,State.NORTH,nR,nC);
+		
+		states[28] = new State(1,3,State.EAST,nR,nC);
+		states[29] = new State(1,3,State.SOUTH,nR,nC);
+		states[30] = new State(1,3,State.WEST,nR,nC);
+		states[31] = new State(1,3,State.NORTH,nR,nC);
+		
+		states[32] = new State(2,0,State.EAST,nR,nC);
+		states[33] = new State(2,0,State.SOUTH,nR,nC);
+		states[34] = new State(2,0,State.WEST,nR,nC);
+		states[35] = new State(2,0,State.NORTH,nR,nC);
+		
+		states[36] = new State(2,1,State.EAST,nR,nC);
+		states[37] = new State(2,1,State.SOUTH,nR,nC);
+		states[38] = new State(2,1,State.WEST,nR,nC);
+		states[39] = new State(2,1,State.NORTH,nR,nC);
+		
+		states[40] = new State(2,2,State.EAST,nR,nC);
+		states[41] = new State(2,2,State.SOUTH,nR,nC);
+		states[42] = new State(2,2,State.WEST,nR,nC);
+		states[43] = new State(2,2,State.NORTH,nR,nC);
+		
+		states[44] = new State(2,3,State.EAST,nR,nC);
+		states[45] = new State(2,3,State.SOUTH,nR,nC);
+		states[46] = new State(2,3,State.WEST,nR,nC);
+		states[47] = new State(2,3,State.NORTH,nR,nC);
+		
+		states[48] = new State(3,0,State.EAST,nR,nC);
+		states[49] = new State(3,0,State.SOUTH,nR,nC);
+		states[50] = new State(3,0,State.WEST,nR,nC);
+		states[51] = new State(3,0,State.NORTH,nR,nC);
+		
+		states[52] = new State(3,1,State.EAST,nR,nC);
+		states[53] = new State(3,1,State.SOUTH,nR,nC);
+		states[54] = new State(3,1,State.WEST,nR,nC);
+		states[55] = new State(3,1,State.NORTH,nR,nC);
+		
+		states[56] = new State(3,2,State.EAST,nR,nC);
+		states[57] = new State(3,2,State.SOUTH,nR,nC);
+		states[58] = new State(3,2,State.WEST,nR,nC);
+		states[59] = new State(3,2,State.NORTH,nR,nC);
+		
+		states[60] = new State(3,3,State.EAST,nR,nC);
+		states[61] = new State(3,3,State.SOUTH,nR,nC);
+		states[62] = new State(3,3,State.WEST,nR,nC);
+		states[63] = new State(3,3,State.NORTH,nR,nC);
+		
+	}
