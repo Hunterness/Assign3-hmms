@@ -32,11 +32,11 @@ public class Sensor {
 			return probabilityCorrect;
 		}
 		
-		if ((x == rX-1 || x == rX+1) && (y == rY-1 || y == rY+1)) {
+		if ((x == rX-1 || x == rX+1 || x == rX) && (y == rY-1 || y == rY+1 || y == rY)) {
 			return probabilityS1;
 		}
 		
-		if ((x == rX-2 || x == rX+2) && (y == rY-2 || y == rY+2)) {
+		if ((x == rX-2 || x == rX+2 || x == rX-1 || x == rX+1 || x == rX) && (y == rY-2 || y == rY+2 || y == rY-1 || y == rY+1 || y == rY)) {
 			return probabilityS2;
 		}
 		

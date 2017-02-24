@@ -12,7 +12,10 @@ import control.EstimatorInterface;
 public class OurLocalizer implements EstimatorInterface {
 
 	//unclear if needed and where to put but maybe nice to have:P
-	private double probChangeHeadingNoWall, probDontChangeHeadingNoWall, probChangeHeadingWall, probDontChangeHeadingWall;
+	private static final double PROB_DONT_CHANGE_HEAD_NO_WALL = 0.7;
+	private static final double PROB_CHANGE_HEAD_NO_WALL = 0.3;
+	private static final double PROB_DONT_CHANGE_HEAD_WALL = 0;
+	private static final double PROB_CHANGE_HEAD_WALL = 1;
 	
 	private int nbrOfRows, nbrOfCols, nbrOfhead;
 	private State currentState;
@@ -23,10 +26,7 @@ public class OurLocalizer implements EstimatorInterface {
 		this.nbrOfhead = head;
 		currentState = new State(1, 1, State.EAST, nbrOfRows, nbrOfCols); //start state right now (1,1) heading east
 		
-		probDontChangeHeadingNoWall = 0.7;
-		probChangeHeadingNoWall = 0.3;
-		probDontChangeHeadingWall = 0;
-		probChangeHeadingWall = 1;
+		
 		
 	}	
 	
