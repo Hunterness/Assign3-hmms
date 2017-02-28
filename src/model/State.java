@@ -13,7 +13,7 @@ public class State {
 	public static final int NORTH = 3;
 
 	private int x, y, heading, nbrRows, nbrCols;
-	private ArrayList<State> neighS1, neighS2;
+	private ArrayList<Pair> neighS1, neighS2;
 
 	public State(int row, int col, int head, int nbrRows, int nbrCols) {
 		x = row;
@@ -22,8 +22,8 @@ public class State {
 		this.nbrRows = nbrRows;
 		this.nbrCols = nbrCols;
 
-		neighS1 = new ArrayList<State>();
-		neighS2 = new ArrayList<State>();
+		neighS1 = new ArrayList<Pair>();
+		neighS2 = new ArrayList<Pair>();
 
 		setNeighbours(1);
 		setNeighbours(2);
@@ -32,34 +32,33 @@ public class State {
 
 	private void setNeighbours(int step) {// TODO: All headings
 		if (step == 1) {
-			
 			//one row above
-			if (x-1 > 0){
-				neighS1.add(new State(x-1, y, heading, nbrRows, nbrCols));
-				if (y-1 > 0){
-					neighS1.add(new State(x-1, y-1, heading, nbrRows, nbrCols));
+			if (x-1 >= 0){
+				neighS1.add(new Pair(x-1, y));
+				if (y-1 >= 0){
+					neighS1.add(new Pair(x-1, y-1));
 				}
-				if (y+1 < nbrCols-1){
-					neighS1.add(new State(x-1, y+1, heading, nbrRows, nbrCols));
+				if (y+1 < nbrCols){
+					neighS1.add(new Pair(x-1, y+1));
 				}
 			}
 			
 			//same row
-			if (y-1 > 0){
-				neighS1.add(new State(x, y-1, heading, nbrRows, nbrCols));
+			if (y-1 >= 0){
+				neighS1.add(new Pair(x, y-1));
 			}
-			if (y+1 < nbrCols-1){
-				neighS1.add(new State(x, y+1, heading, nbrRows, nbrCols));
+			if (y+1 < nbrCols){
+				neighS1.add(new Pair(x, y+1));
 			}
 			
 			//one row below
-			if (x+1 < nbrRows-1){
-				neighS1.add(new State(x+1, y, heading, nbrRows, nbrCols));
-				if (y-1 > 0){
-					neighS1.add(new State(x+1, y-1, heading, nbrRows, nbrCols));
+			if (x+1 < nbrRows){
+				neighS1.add(new Pair(x+1, y));
+				if (y-1 >= 0){
+					neighS1.add(new Pair(x+1, y-1));
 				}
-				if (y+1 < nbrCols-1){
-					neighS1.add(new State(x+1, y+1, heading, nbrRows, nbrCols));
+				if (y+1 < nbrCols){
+					neighS1.add(new Pair(x+1, y+1));
 				}
 			}
 			
@@ -67,57 +66,57 @@ public class State {
 		} else {
 
 			//two rows above
-			if (x-2 > 0){
-				neighS2.add(new State(x-2, y, heading, nbrRows, nbrCols));
-				if (y-2 > 0)
-					neighS2.add(new State(x-2, y-2, heading, nbrRows, nbrCols));
-				if (y-1 > 0)
-					neighS2.add(new State(x-2, y-1, heading, nbrRows, nbrCols));
-				if (y+1 < nbrCols-1)
-					neighS2.add(new State(x-2, y+1, heading, nbrRows, nbrCols));
-				if (y+2 < nbrCols-1)
-					neighS2.add(new State(x-2, y+2, heading, nbrRows, nbrCols));	
+			if (x-2 >= 0){
+				neighS2.add(new Pair(x-2, y));
+				if (y-2 >= 0)
+					neighS2.add(new Pair(x-2, y-2));
+				if (y-1 >= 0)
+					neighS2.add(new Pair(x-2, y-1));
+				if (y+1 < nbrCols)
+					neighS2.add(new Pair(x-2, y+1));
+				if (y+2 < nbrCols)
+					neighS2.add(new Pair(x-2, y+2));	
 			}
 			
 			//one row above
-			if(x-1 > 0){
-				if (y-2 > 0){
-					neighS2.add(new State(x-1, y-2, heading, nbrRows, nbrCols));
+			if(x-1 >= 0){
+				if (y-2 >= 0){
+					neighS2.add(new Pair(x-1, y-2));
 				}
-				if (y+2 < nbrCols-1){
-					neighS2.add(new State(x-1, y+2, heading, nbrRows, nbrCols));
+				if (y+2 < nbrCols){
+					neighS2.add(new Pair(x-1, y+2));
 				}
 			}
 			
 			//same row
-			if (y-2 > 0){
-				neighS2.add(new State(x, y-2, heading, nbrRows, nbrCols));
+			if (y-2 >= 0){
+				neighS2.add(new Pair(x, y-2));
 			}
-			if (y+2 < nbrCols-1){
-				neighS2.add(new State(x, y+2, heading, nbrRows, nbrCols));
+			if (y+2 < nbrCols){
+				neighS2.add(new Pair(x, y+2));
 			}
 			
 			//one row below
-			if(x+1 < nbrRows-1){
-				if (y-2 > 0){
-					neighS2.add(new State(x+1, y-2, heading, nbrRows, nbrCols));
+			if(x+1 < nbrRows){
+				if (y-2 >= 0){
+					neighS2.add(new Pair(x+1, y-2));
 				}
-				if (y+2 < nbrCols-1){
-					neighS2.add(new State(x+1, y+2, heading, nbrRows, nbrCols));
+				if (y+2 < nbrCols){
+					neighS2.add(new Pair(x+1, y+2));
 				}
 			}
 			
 			//two rows below
-			if (x+2 < nbrRows-1){
-				neighS2.add(new State(x+2, y, heading, nbrRows, nbrCols));
-				if (y-2 > 0)
-					neighS2.add(new State(x+2, y-2, heading, nbrRows, nbrCols));
-				if (y-1 > 0)
-					neighS2.add(new State(x+2, y-1, heading, nbrRows, nbrCols));
-				if (y+1 < nbrCols-1)
-					neighS2.add(new State(x+2, y+1, heading, nbrRows, nbrCols));
-				if (y+2 < nbrCols-1)
-					neighS2.add(new State(x+2, y+2, heading, nbrRows, nbrCols));
+			if (x+2 < nbrRows){
+				neighS2.add(new Pair(x+2, y));
+				if (y-2 >= 0)
+					neighS2.add(new Pair(x+2, y-2));
+				if (y-1 >= 0)
+					neighS2.add(new Pair(x+2, y-1));
+				if (y+1 < nbrCols)
+					neighS2.add(new Pair(x+2, y+1));
+				if (y+2 < nbrCols)
+					neighS2.add(new Pair(x+2, y+2));
 			}
 		}
 
@@ -168,23 +167,25 @@ public class State {
 	 *            - the step: 1 or 2
 	 * @return a list of neighbouring states
 	 */
-	public State[] getNeighbours(int step) {
+	public Reading[] getNeighbours(int step) {
 
 		if (step == 1) {
 			int size = neighS1.size();
-			State[] ret = new State[size];
-
+			Reading[] ret = new Reading[size];
+			Pair p;
 			for (int i = 0; i < size; i++) {
-				ret[i] = neighS1.get(i);
+				p = neighS1.get(i);
+				ret[i] = new Reading(p.x,p.y,nbrRows,nbrCols);
 			}
 
 			return ret;
 		} else {
 			int size = neighS2.size();
-			State[] ret = new State[size];
-
+			Reading[] ret = new Reading[size];
+			Pair p;
 			for (int i = 0; i < size; i++) {
-				ret[i] = neighS2.get(i);
+				p = neighS2.get(i);
+				ret[i] = new Reading(p.x,p.y,nbrRows,nbrCols);
 			}
 
 			return ret;
@@ -263,6 +264,10 @@ public class State {
 		}
 
 		heading = head;
+		neighS1.clear();
+		neighS2.clear();
+		setNeighbours(1);
+		setNeighbours(2);
 		return true;
 	}
 
@@ -321,4 +326,11 @@ public class State {
 		return "Coordinates: (" + x + ", " + y + "), heading: " + head;
 	}
 
+	private class Pair {
+		int x, y;
+		public Pair(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
 }
