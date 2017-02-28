@@ -3,7 +3,7 @@ package model;
 public class Reading {
 
 	private int x, y, nbrS1, nbrS2;
-
+	
 	/**
 	 * Describes the reading (x,y) from the sensor
 	 * 

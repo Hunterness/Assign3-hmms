@@ -13,6 +13,7 @@ public class OurLocalizer implements EstimatorInterface {
 	
 	private int nbrOfRows, nbrOfCols, nbrOfhead;
 	private State currentState;
+	private Reading currentRead;
 	private Sensor sensor;
 
 	public OurLocalizer( int rows, int cols, int head) {
@@ -21,6 +22,7 @@ public class OurLocalizer implements EstimatorInterface {
 		this.nbrOfhead = head;
 		sensor = new Sensor();
 		currentState = new State(1, 1, State.EAST, nbrOfRows, nbrOfCols); //start state right now (1,1) heading east
+		currentRead = new Reading();
 	}	
 	
 	
@@ -54,9 +56,13 @@ public class OurLocalizer implements EstimatorInterface {
 	 * after one method call.
 	 */
 	public void update() { //TODO
+		//Update State
+		currentState.updateState(currentState.getHeading());
 		//Get reading from sensor
+		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
 		//Update f
 		//Calc most probable position
+		
 	}
 	
 	
@@ -79,8 +85,9 @@ public class OurLocalizer implements EstimatorInterface {
 	 * after the simulation step 
 	 */
 	public int[] getCurrentReading() { //TODO
-		int[] ret = null;
-		
+		int[] ret = new int[2];
+		ret[0] = currentRead.getX();
+		ret[1] = currentRead.getY();
 		return ret;
 	}
 

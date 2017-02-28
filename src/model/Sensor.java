@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 /**
  * @author dat13tma, elt13hli
  *
@@ -61,9 +63,30 @@ public class Sensor {
 		return probabilityNothing;
 	}
 	
-	//TODO implement
-	public State getNewReading() {
-		return null;
+	public Reading getNewReading(State currState, int nbrOfRows, int nbrOfCols) {
+		State[] ns1 = currState.getNeighbours(1);
+		State[] ns2 = currState.getNeighbours(2);
+		double pL = 0.1;
+		double pNs2 = ns1.length*probabilityS2;
+		double pNs1 = ns1.length*probabilityS1;
+		double p = Math.random();
+		State nextState;
+		if (p <= pL) {
+			nextState = currState;
+			return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
+		} else if (p <= (pL + pNs1)) {
+			Random rand = new Random();
+			int index = rand.nextInt(ns1.length);
+			nextState = ns1[index];
+			return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
+		} else if (p <= (pL + pNs1 + pNs2)) {
+			Random rand = new Random();
+			int index = rand.nextInt(ns2.length);
+			nextState = ns2[index];
+			return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
+		} else {
+			return new Reading();
+		}
 	}
 
 }
