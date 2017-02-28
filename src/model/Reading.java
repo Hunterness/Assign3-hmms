@@ -117,4 +117,11 @@ public class Reading {
 		return nbrS2;
 	}
 
+	public boolean equals(Object obj){
+		if (obj instanceof Reading) {
+			Reading r = (Reading)obj;
+			return r.getX()==x && r.getY()==y;
+		}
+		return false;
+	}
 }

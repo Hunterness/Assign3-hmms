@@ -14,11 +14,12 @@ public class HMM {
 	private Sensor sensor;
 	private State[] states;
 	private Reading[] readings;
+	private int nCol, nRow, nHead;
 
 	public HMM(OurLocalizer ol, Sensor sen) {
-		int nRow = ol.getNumRows();
-		int nCol = ol.getNumCols();
-		int nHead = ol.getNumHead();
+		nRow = ol.getNumRows();
+		nCol = ol.getNumCols();
+		nHead = ol.getNumHead();
 
 		int nbrStates = nRow * nCol * nHead;
 
@@ -143,10 +144,24 @@ public class HMM {
 		}
 		return T;
 	}
+	
+	public double getOrXY(Reading r, int x, int y)  { // TODO Correct?
+		int indexReadingState = -1;
+		int indexTrueState  = -1;
+		for (int i = 0 ; i < readings.length ; i++) {
+			if (readings[i].getX() == x && readings[i].getY() == y) {
+				indexTrueState = i;
+			}
+			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
+				indexReadingState = i;
+			}
+		}
+		Matrix o = O[indexReadingState];
+		return o.get(indexTrueState*nHead, indexTrueState*nHead);
+	}
 
 	public static void main(String[] args) {
 		// Test main
 		HMM h = new HMM(new OurLocalizer(4, 4, 4), new Sensor());
-
 	}
 }

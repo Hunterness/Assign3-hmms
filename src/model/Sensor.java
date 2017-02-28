@@ -53,6 +53,8 @@ public class Sensor {
 					&& (y == rY - 2 || y == rY + 2 || y == rY - 1 || y == rY + 1 || y == rY)) {
 				return probabilityS2;
 			}
+			
+			return 0;
 		}
 		double probabilityNothing = 1;
 
@@ -85,8 +87,6 @@ public class Sensor {
 		} else {
 			return new Reading();
 		}
-//		State nextState = currState;
-//		return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
 	}
 
 }

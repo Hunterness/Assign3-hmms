@@ -6,6 +6,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Jama.Matrix;
 import control.EstimatorInterface;
 
 /**
@@ -18,6 +19,7 @@ public class OurLocalizer implements EstimatorInterface {
 	private State currentState;
 	private Reading currentRead;
 	private Sensor sensor;
+	private HMM hmm;
 
 	public OurLocalizer(int rows, int cols, int head) {
 		this.nbrOfRows = rows;
@@ -32,6 +34,7 @@ public class OurLocalizer implements EstimatorInterface {
 																			// heading
 																			// east
 		currentRead = new Reading();
+		hmm = new HMM(this, sensor);
 	}
 
 	/**
@@ -132,7 +135,8 @@ public class OurLocalizer implements EstimatorInterface {
 		 * note that you have to take care of potentially necessary
 		 * transformations from states i = <x, y, h> to positions (x, y).
 		 */
-		return 0;
+		Reading r = new Reading(rX, rY, nbrOfRows, nbrOfCols);
+		return hmm.getOrXY(r, x, y);
 	}
 
 	/**
