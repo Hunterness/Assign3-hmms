@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import control.*;
+import model.State;
 
 
 public class RobotLocalizationViewer {

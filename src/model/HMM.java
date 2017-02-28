@@ -59,7 +59,7 @@ public class HMM {
 				index++;
 			}
 		}
-
+		
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
@@ -159,9 +159,28 @@ public class HMM {
 		Matrix o = O[indexReadingState];
 		return o.get(indexTrueState*nHead, indexTrueState*nHead);
 	}
-
-	public static void main(String[] args) {
-		// Test main
-		HMM h = new HMM(new OurLocalizer(4, 4, 4), new Sensor());
+	
+	public double getTProb(State s1, State s2) {
+		int indexS1= -1;
+		int indexS2  = -1;
+		for (int i = 0 ; i < states.length ; i++) {
+			if (states[i].equals(s1)) {
+				indexS1 = i;
+			}
+			if (states[i].equals(s2)) {
+				indexS2 = i;
+			}
+		}
+		return T.get(indexS1, indexS2);
 	}
+
+	public State[] getStates() {
+		return states;
+	}
+	
+//	public static void main(String[] args) {
+//		// Test main
+//		HMM h = new HMM(new OurLocalizer(4, 4, 4), new Sensor());
+//		System.out.println(h.getTProb(new State(0,0,State.NORTH,4,4), new State(1,0,State.SOUTH,4,4)));
+//	}
 }
