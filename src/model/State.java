@@ -115,16 +115,38 @@ public class State {
 	}
 	
 	/**
-	 * Checks if it is allowed to move from this state to the given state.
+	 * Checks if it is allowed to move from this state to the state to.
 	 * 
-	 * @param s - the state to check if allowed to move to
+	 * @param to - the state to check if allowed to move to
 	 * @return true if allowed to move from here to s
 	 */
-	public boolean allowedMove(State s){
-		if ((x+1 == s.x && y == s.y && s.heading == SOUTH)||(x-1 == s.x && y == s.y && s.heading == NORTH)){
+	public boolean allowedMove(State to){
+		if ((x+1 == to.x && y == to.y && to.heading == SOUTH)||(x-1 == to.x && y == to.y && to.heading == NORTH)){
 			return true;
 		}
-		if ((x == s.x && y+1 == s.y && s.heading == EAST)||(x == s.x && y-1 == s.y && s.heading == WEST)){
+		if ((x == to.x && y+1 == to.y && to.heading == EAST)||(x == to.x && y-1 == to.y && to.heading == WEST)){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	/**
+	 * Checks if there is a wall in front of the state (direction heading)
+	 * @return true if the end of the grid is to the heading of the coordinates of the state
+	 */
+	public boolean faceWall() {
+		if (x == 0 && heading == State.NORTH){
+			return true;
+		}
+		if (x == nbrRows-1 && heading == State.SOUTH){
+			return true;
+		}
+		if (y == 0 && heading == State.WEST){
+			return true;
+		}
+		if (y == nbrCols-1 && heading == State.EAST){
 			return true;
 		}
 		
@@ -143,5 +165,7 @@ public class State {
 			head = "North";
 		return "Coordinates: (" + x + ", " + y + "), heading: " + head;
 	}
+
+	
 	
 }

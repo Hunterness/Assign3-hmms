@@ -10,12 +10,6 @@ import control.EstimatorInterface;
  *
  */
 public class OurLocalizer implements EstimatorInterface {
-
-	//unclear if needed and where to put but maybe nice to have:P
-	private static final double PROB_DONT_CHANGE_HEAD_NO_WALL = 0.7;
-	private static final double PROB_CHANGE_HEAD_NO_WALL = 0.3;
-	private static final double PROB_DONT_CHANGE_HEAD_WALL = 0;
-	private static final double PROB_CHANGE_HEAD_WALL = 1;
 	
 	private int nbrOfRows, nbrOfCols, nbrOfhead;
 	private State currentState;
