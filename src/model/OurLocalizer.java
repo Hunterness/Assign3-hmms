@@ -26,7 +26,7 @@ public class OurLocalizer implements EstimatorInterface {
 		this.nbrOfCols = cols;
 		this.nbrOfhead = head;
 		sensor = new Sensor();
-		currentState = new State(1, 1, State.EAST, nbrOfRows, nbrOfCols); // start
+		currentState = new State(0, 0, State.NORTH, nbrOfRows, nbrOfCols); // start
 																			// state
 																			// right
 																			// now
@@ -130,7 +130,7 @@ public class OurLocalizer implements EstimatorInterface {
 	 *         probability for the sensor to return "nothing" given the robot is
 	 *         in position (x, y).
 	 */
-	public double getOrXY(int rX, int rY, int x, int y) { // TODO
+	public double getOrXY(int rX, int rY, int x, int y) { 
 		/*
 		 * note that you have to take care of potentially necessary
 		 * transformations from states i = <x, y, h> to positions (x, y).
@@ -143,8 +143,15 @@ public class OurLocalizer implements EstimatorInterface {
 	 * @return the probability entry (Tij) of the transition matrix T to go from
 	 *         pose i = (x, y, h) to pose j = (nX, nY, nH)
 	 */
-	public double getTProb(int x, int y, int h, int nX, int nY, int nH) { // TODO
-		return 0;
+	public double getTProb(int x, int y, int h, int nX, int nY, int nH) {
+		nH = (nH+3)%nbrOfhead;
+		h = (h+3)%nbrOfhead;
+		State s1 = new State(x,y,h, nbrOfRows, nbrOfCols);
+		State s2 = new State(nX,nY,nH, nbrOfRows, nbrOfCols);
+		System.out.println("Testing " + x + " " + y + " " + h + " and " + nX + "  " + nY + " "+ nH);
+		double d = hmm.getTProb(s1, s2);
+		System.out.println(d);
+		return d;
 	}
 
 }

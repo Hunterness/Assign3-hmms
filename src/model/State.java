@@ -312,6 +312,14 @@ public class State {
 
 		return false;
 	}
+	
+	public boolean equals(Object obj){
+		if (obj instanceof State) {
+			State r = (State)obj;
+			return r.getX()==x && r.getY()==y && r.getHeading() == heading;
+		}
+		return false;
+	}
 
 	public String toString() {
 		String head;
