@@ -173,10 +173,6 @@ public class HMM {
 		}
 		return T.get(indexS1, indexS2);
 	}
-
-	public State[] getStates() {
-		return states;
-	}
 	
 //	public static void main(String[] args) {
 //		// Test main
