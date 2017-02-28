@@ -102,7 +102,10 @@ public class Reading {
 	 *            - number cols
 	 * @return the number of step away neighbours
 	 */
-	public static int getNbrNeighbouds(int x, int y, int step, int nR, int nC) {
+	public static int getNbrNeighbouds(State s, int step, int nR, int nC) {
+		int x = s.getX();
+		int y = s.getY();
+		
 		int nbr = 0;
 
 		if (step == 1) {

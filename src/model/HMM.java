@@ -59,34 +59,32 @@ public class HMM {
 			}
 		}
 
-		for (int i = 0; i < nbrStates; i++) {
-			for (int j = 0; j < nbrStates; j++) {
-				System.out.print(O[0].get(i, j) + " ");
-			}
-			System.out.print("\n");
-		}
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
 		double[][] O = new double[nbrStates][nbrStates];
 		Reading r = readings[index];
 
-		for (int i = 0; i < nbrStates; i++) {
+		for (int i = 0; i < nbrStates; i += 4) {
 			double prob = 0;
+			State s = states[i];
 
 			if (r.getX() == -1 || r.getY() == -1) {
 				// O-matrix for nothing
 				
-				int nbrS1 = Reading.getNbrNeighbouds(i, i, 1, nR, nC);
-				int nbrS2 = Reading.getNbrNeighbouds(i, i, 2, nR, nC);
+				int nbrS1 = Reading.getNbrNeighbouds(s, 1, nR, nC);
+				int nbrS2 = Reading.getNbrNeighbouds(s, 2, nR, nC);
 				
-				prob = sensor.getProbability(-1, -1, i, i, nbrS1, nbrS2);
+				prob = sensor.getProbability(-1, -1, s.getX(), s.getY(), nbrS1, nbrS2);
 
 			} else {
-				prob = sensor.getProbability(i, i, r.getX(), r.getY(), r.getNbrS1(), r.getNbrS2());
+				prob = sensor.getProbability(s.getX(), s.getY(), r.getX(), r.getY(), r.getNbrS1(), r.getNbrS2());
 			}
 
 			O[i][i] = prob;
+			O[i+1][i+1] = prob;
+			O[i+2][i+2] = prob;
+			O[i+3][i+3] = prob;
 
 		}
 
@@ -116,12 +114,8 @@ public class HMM {
 					double ProbabilityForMove = 0;
 
 					if (from.faceWall()) {
-						if (to.getHeading() == from.getHeading()) { // Should be
-																	// unnecessary
-																	// since not
-																	// a
-																	// possible
-																	// move
+						if (to.getHeading() == from.getHeading()) { 
+							// Should be unnecessary since not a possible move
 							ProbabilityForMove = PROB_DONT_CHANGE_HEAD_WALL;
 						} else {
 							ProbabilityForMove = PROB_CHANGE_HEAD_WALL / nbrPoss;
