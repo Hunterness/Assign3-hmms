@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 /**
  * @author dat13tma, elt13hli
  *
@@ -11,6 +13,7 @@ public class State {
 	public static final int NORTH = 3;
 
 	private int x, y, heading, nbrRows, nbrCols;
+	private ArrayList<State> neighS1, neighS2;
 
 	public State(int row, int col, int head, int nbrRows, int nbrCols) {
 		x = row;
@@ -18,6 +21,106 @@ public class State {
 		heading = head;
 		this.nbrRows = nbrRows;
 		this.nbrCols = nbrCols;
+
+		neighS1 = new ArrayList<State>();
+		neighS2 = new ArrayList<State>();
+
+		setNeighbours(1);
+		setNeighbours(2);
+
+	}
+
+	private void setNeighbours(int step) {// TODO: All headings
+		if (step == 1) {
+			
+			//one row above
+			if (x-1 > 0){
+				neighS1.add(new State(x-1, y, heading, nbrRows, nbrCols));
+				if (y-1 > 0){
+					neighS1.add(new State(x-1, y-1, heading, nbrRows, nbrCols));
+				}
+				if (y+1 < nbrCols-1){
+					neighS1.add(new State(x-1, y+1, heading, nbrRows, nbrCols));
+				}
+			}
+			
+			//same row
+			if (y-1 > 0){
+				neighS1.add(new State(x, y-1, heading, nbrRows, nbrCols));
+			}
+			if (y+1 < nbrCols-1){
+				neighS1.add(new State(x, y+1, heading, nbrRows, nbrCols));
+			}
+			
+			//one row below
+			if (x+1 < nbrRows-1){
+				neighS1.add(new State(x+1, y, heading, nbrRows, nbrCols));
+				if (y-1 > 0){
+					neighS1.add(new State(x+1, y-1, heading, nbrRows, nbrCols));
+				}
+				if (y+1 < nbrCols-1){
+					neighS1.add(new State(x+1, y+1, heading, nbrRows, nbrCols));
+				}
+			}
+			
+			
+		} else {
+
+			//two rows above
+			if (x-2 > 0){
+				neighS2.add(new State(x-2, y, heading, nbrRows, nbrCols));
+				if (y-2 > 0)
+					neighS2.add(new State(x-2, y-2, heading, nbrRows, nbrCols));
+				if (y-1 > 0)
+					neighS2.add(new State(x-2, y-1, heading, nbrRows, nbrCols));
+				if (y+1 < nbrCols-1)
+					neighS2.add(new State(x-2, y+1, heading, nbrRows, nbrCols));
+				if (y+2 < nbrCols-1)
+					neighS2.add(new State(x-2, y+2, heading, nbrRows, nbrCols));	
+			}
+			
+			//one row above
+			if(x-1 > 0){
+				if (y-2 > 0){
+					neighS2.add(new State(x-1, y-2, heading, nbrRows, nbrCols));
+				}
+				if (y+2 < nbrCols-1){
+					neighS2.add(new State(x-1, y+2, heading, nbrRows, nbrCols));
+				}
+			}
+			
+			//same row
+			if (y-2 > 0){
+				neighS2.add(new State(x, y-2, heading, nbrRows, nbrCols));
+			}
+			if (y+2 < nbrCols-1){
+				neighS2.add(new State(x, y+2, heading, nbrRows, nbrCols));
+			}
+			
+			//one row below
+			if(x+1 < nbrRows-1){
+				if (y-2 > 0){
+					neighS2.add(new State(x+1, y-2, heading, nbrRows, nbrCols));
+				}
+				if (y+2 < nbrCols-1){
+					neighS2.add(new State(x+1, y+2, heading, nbrRows, nbrCols));
+				}
+			}
+			
+			//two rows below
+			if (x+2 < nbrRows-1){
+				neighS2.add(new State(x+2, y, heading, nbrRows, nbrCols));
+				if (y-2 > 0)
+					neighS2.add(new State(x+2, y-2, heading, nbrRows, nbrCols));
+				if (y-1 > 0)
+					neighS2.add(new State(x+2, y-1, heading, nbrRows, nbrCols));
+				if (y+1 < nbrCols-1)
+					neighS2.add(new State(x+2, y+1, heading, nbrRows, nbrCols));
+				if (y+2 < nbrCols-1)
+					neighS2.add(new State(x+2, y+2, heading, nbrRows, nbrCols));
+			}
+		}
+
 	}
 
 	/**
@@ -46,27 +149,47 @@ public class State {
 	/**
 	 * returns the number of step away neighbours
 	 * 
-	 * @param step - the step: 1 or 2
+	 * @param step
+	 *            - the step: 1 or 2
 	 * @return the number of step away neighbours
 	 */
-	public int getNbrNeighbours(int step){ //TODO
+	public int getNbrNeighbours(int step) {
 		if (step == 1) {
-			return 0;
+			return neighS1.size();
 		} else {
-			return 0;
+			return neighS2.size();
 		}
 	}
 
 	/**
 	 * Returns a list of neighbours the number step away
 	 * 
-	 * @param step - the step: 1 or 2
+	 * @param step
+	 *            - the step: 1 or 2
 	 * @return a list of neighbouring states
 	 */
-	public State[] getNeighbours(int step) {// TODO
-		return null;
-	}
+	public State[] getNeighbours(int step) {
 
+		if (step == 1) {
+			int size = neighS1.size();
+			State[] ret = new State[size];
+
+			for (int i = 0; i < size; i++) {
+				ret[i] = neighS1.get(i);
+			}
+
+			return ret;
+		} else {
+			int size = neighS2.size();
+			State[] ret = new State[size];
+
+			for (int i = 0; i < size; i++) {
+				ret[i] = neighS2.get(i);
+			}
+
+			return ret;
+		}
+	}
 
 	/**
 	 * Calculates which headings is allowed and returns a list of the headings
