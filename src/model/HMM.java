@@ -72,8 +72,8 @@ public class HMM {
 			if (r.getX() == -1 || r.getY() == -1) {
 				// O-matrix for nothing
 				
-				int nbrS1 = Reading.getNbrNeighbouds(s, 1, nR, nC);
-				int nbrS2 = Reading.getNbrNeighbouds(s, 2, nR, nC);
+				int nbrS1 = Reading.getNbrNeighbours(s.getX(), s.getY(), 1, nR, nC);
+				int nbrS2 = Reading.getNbrNeighbours(s.getX(), s.getY(), 2, nR, nC);
 				
 				prob = sensor.getProbability(-1, -1, s.getX(), s.getY(), nbrS1, nbrS2);
 

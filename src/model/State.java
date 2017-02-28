@@ -12,6 +12,7 @@ public class State {
 	
 	private int x, y, heading, nbrRows, nbrCols;
 	
+	
 	public State(int row, int col, int head, int nbrRows, int nbrCols){
 		x = row;
 		y = col;
@@ -41,6 +42,8 @@ public class State {
 	public int getHeading(){
 		return heading;
 	}
+	
+	
 	
 	/**
 	 * Calculates which headings is allowed and returns a list of the headings 
