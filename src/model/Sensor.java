@@ -60,5 +60,10 @@ public class Sensor {
 
 		return probabilityNothing;
 	}
+	
+	//TODO implement
+	public State getNewReading() {
+		return null;
+	}
 
 }

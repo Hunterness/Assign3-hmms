@@ -169,6 +169,14 @@ public class State {
 		return "Coordinates: (" + x + ", " + y + "), heading: " + head;
 	}
 
+	//TODO
+	public State[] getNs1() {
+		return null;
+	}
 	
+	//TODO
+	public State[] getNs2() {
+		return null;
+	}
 	
 }
