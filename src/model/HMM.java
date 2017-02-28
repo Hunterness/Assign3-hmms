@@ -59,7 +59,13 @@ public class HMM {
 				index++;
 			}
 		}
-		
+		double[][] empty = new double[nbrStates][nbrStates];
+		State s;
+		for (int i = 0; i < nbrStates; i++) {
+			s = states[i];
+			empty[i][i] = sensor.getProbability(-1, -1, s.getX(), s.getY(), s.getNbrNeighbours(1), s.getNbrNeighbours(2));
+		}
+		O[O.length-1] = new Matrix(empty);
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
@@ -88,7 +94,6 @@ public class HMM {
 			O[i+3][i+3] = prob;
 
 		}
-
 		Matrix ret = new Matrix(O);
 		return ret;
 	}
@@ -145,7 +150,26 @@ public class HMM {
 		return T;
 	}
 	
+	public Matrix getO(Reading r) {
+		if (r.getX() == -1 && r.getY() == -1)
+			return O[O.length-1];
+		int index = -1;
+		for (int i = 0 ; i < readings.length ; i++) {
+			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
+				index = i;
+				break;
+			}
+		}
+		return O[index];
+	}
+	
+	public Matrix getT() {
+		return T;
+	}
+	
 	public double getOrXY(Reading r, int x, int y)  { // TODO Correct?
+		if (r.getX() == -1 && r.getY() == -1)
+			return O[O.length-1].get(x, y);
 		int indexReadingState = -1;
 		int indexTrueState  = -1;
 		for (int i = 0 ; i < readings.length ; i++) {

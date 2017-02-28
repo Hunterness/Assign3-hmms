@@ -20,6 +20,7 @@ public class OurLocalizer implements EstimatorInterface {
 	private Reading currentRead;
 	private Sensor sensor;
 	private HMM hmm;
+	private Matrix f;
 
 	public OurLocalizer(int rows, int cols, int head) {
 		this.nbrOfRows = rows;
@@ -35,6 +36,16 @@ public class OurLocalizer implements EstimatorInterface {
 																			// east
 		currentRead = new Reading();
 		hmm = new HMM(this, sensor);
+		double[][] tmpF = new double[rows*cols*head][1];
+		for (int i = 0 ; i < rows*cols*head ; i++) {
+				tmpF[i][0] = 1.0/64.0;
+		}
+		f = new Matrix(tmpF);
+//		f = new Matrix(rows*cols*head,1,0);
+//		f.set(0, 0, 0.25);
+//		f.set(1, 0, 0.25);
+//		f.set(2, 0, 0.25);
+//		f.set(3, 0, 0.25);
 	}
 
 	/**
@@ -85,8 +96,16 @@ public class OurLocalizer implements EstimatorInterface {
 		// Get reading from sensor
 		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
 		// Update f
-		// Calc most probable position
-
+		Matrix O = hmm.getO(currentRead);
+		Matrix T = hmm.getT().transpose();
+		Matrix newF = O.times(T).times(f);
+		double sum = 0;
+		for (int i = 0 ; i < newF.getRowDimension() ; i++) {
+			sum += newF.get(i, 0);
+		}
+		double alpha = 1/sum;
+		newF = newF.times(alpha);
+		f = newF;
 	}
 
 	/**
@@ -119,7 +138,11 @@ public class OurLocalizer implements EstimatorInterface {
 	 *         considered, as it makes the view somewhat unclear.
 	 */
 	public double getCurrentProb(int x, int y) { // TODO
-		double ret = 0.0;
+		double ret = 0;
+		ret += f.get(x*nbrOfCols+y*nbrOfhead, 0);
+		ret += f.get(x*nbrOfCols+y*nbrOfhead+1, 0);
+		ret += f.get(x*nbrOfCols+y*nbrOfhead+2, 0);
+		ret += f.get(x*nbrOfCols+y*nbrOfhead+3, 0);
 		return ret;
 	}
 
