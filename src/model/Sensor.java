@@ -79,18 +79,18 @@ public class Sensor {
 		Reading[] ns1 = currState.getNeighbours(1);
 		Reading[] ns2 = currState.getNeighbours(2);
 		double pL = probabilityCorrect;
-		double pNs1 = ns1.length * probabilityS1;
-		double pNs2 = ns2.length * probabilityS2;
+		double pNs1 = pL + ns1.length * probabilityS1;
+		double pNs2 = pL + pNs1 + ns2.length * probabilityS2;
 		double p = Math.random();
 		State nextState;
 		if (p <= pL) {
 			nextState = currState;
 			return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
-		} else if (p <= (pL + pNs1)) {
+		} else if (p <= pNs1) {
 			Random rand = new Random();
 			int index = rand.nextInt(ns1.length);
 			return ns1[index];
-		} else if (p <= (pL + pNs1 + pNs2)) {
+		} else if (p <= pNs2) {
 			Random rand = new Random();
 			int index = rand.nextInt(ns2.length);
 			return ns2[index];

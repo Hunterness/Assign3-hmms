@@ -2,7 +2,6 @@ package model;
 
 import Jama.Matrix;
 
-
 /**
  * @author dat13tma, elt13hli
  *
@@ -29,7 +28,7 @@ public class HMM {
 		int nbrStates = nRow * nCol * nHead;
 
 		sensor = sen;
-		
+
 		// the possible states
 		states = new State[nbrStates];
 		int index = 0;
@@ -65,6 +64,7 @@ public class HMM {
 		for (int i = 0; i < size; i++) {
 			O[i] = makeO(nbrStates, i, nRow, nCol);
 		}
+
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
@@ -77,10 +77,10 @@ public class HMM {
 
 			if (r.getX() == -1 || r.getY() == -1) {
 				// O-matrix for nothing
-				
+
 				int nbrS1 = s.getNbrNeighbours(1);
 				int nbrS2 = s.getNbrNeighbours(2);
-				
+
 				prob = sensor.getProbability(-1, -1, s.getX(), s.getY(), nbrS1, nbrS2);
 
 			} else {
@@ -88,9 +88,9 @@ public class HMM {
 			}
 
 			O[i][i] = prob;
-			O[i+1][i+1] = prob;
-			O[i+2][i+2] = prob;
-			O[i+3][i+3] = prob;
+			O[i + 1][i + 1] = prob;
+			O[i + 2][i + 2] = prob;
+			O[i + 3][i + 3] = prob;
 
 		}
 		Matrix ret = new Matrix(O);
@@ -119,7 +119,7 @@ public class HMM {
 					double ProbabilityForMove = 0;
 
 					if (from.faceWall()) {
-						if (to.getHeading() == from.getHeading()) { 
+						if (to.getHeading() == from.getHeading()) {
 							// Should be unnecessary since not a possible move
 							ProbabilityForMove = PROB_DONT_CHANGE_HEAD_WALL;
 						} else {
@@ -148,18 +148,19 @@ public class HMM {
 		}
 		return T;
 	}
-	
+
 	/**
 	 * Gives back the O matrix for the given reading
 	 * 
-	 * @param r - the current reading from the sensor
+	 * @param r
+	 *            - the current reading from the sensor
 	 * @return the O matrix for the reading r
 	 */
 	public Matrix getO(Reading r) {
 		if (r.getX() == -1 && r.getY() == -1)
-			return O[O.length-1];
+			return O[O.length - 1];
 		int index = -1;
-		for (int i = 0 ; i < readings.length ; i++) {
+		for (int i = 0; i < readings.length; i++) {
 			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
 				index = i;
 				break;
@@ -167,34 +168,37 @@ public class HMM {
 		}
 		return O[index];
 	}
-	
+
 	/**
 	 * @return the T matrix
 	 */
 	public Matrix getT() {
 		return T;
 	}
-	
+
 	/**
-	 * Returns the probability entry of the sensor matrices O to get reading r when actually in position (x,y).
-	 * If rX or rY (or both) are -1 the method return the probability for the sensor 
-	 * to return "nothing" given the robot is in position (x, y)
+	 * Returns the probability entry of the sensor matrices O to get reading r
+	 * when actually in position (x,y). If rX or rY (or both) are -1 the method
+	 * return the probability for the sensor to return "nothing" given the robot
+	 * is in position (x, y)
 	 * 
-	 * @param r - the reading
-	 * @param x - the x-coordinate
-	 * @param y - the y-coordinate
+	 * @param r
+	 *            - the reading
+	 * @param x
+	 *            - the x-coordinate
+	 * @param y
+	 *            - the y-coordinate
 	 * 
-	 * @return the probability to get r when in (x,y) 
-	 * 			or the probability for "nothing" for (x,y)
-	 * 			if either (or both) coordinates of r is -1
+	 * @return the probability to get r when in (x,y) or the probability for
+	 *         "nothing" for (x,y) if either (or both) coordinates of r is -1
 	 */
-	public double getOrXY(Reading r, int x, int y)  {
+	public double getOrXY(Reading r, int x, int y) {
 		if (r.getX() == -1 || r.getY() == -1)
-			return O[O.length-1].get(x, y);
-		
+			return O[O.length - 1].get(x, y);
+
 		int indexReadingState = -1;
-		int indexTrueState  = -1;
-		for (int i = 0 ; i < readings.length ; i++) {
+		int indexTrueState = -1;
+		for (int i = 0; i < readings.length; i++) {
 			if (readings[i].getX() == x && readings[i].getY() == y) {
 				indexTrueState = i;
 			}
@@ -203,22 +207,24 @@ public class HMM {
 			}
 		}
 		Matrix o = O[indexReadingState];
-		return o.get(indexTrueState*nHead, indexTrueState*nHead);
+		return o.get(indexTrueState * nHead, indexTrueState * nHead);
 	}
-	
+
 	/**
-	 * Gives the probability entry of the transition matrix T for
-	 * going from state from to state to
+	 * Gives the probability entry of the transition matrix T for going from
+	 * state from to state to
 	 * 
-	 * @param from - the state to go from
-	 * @param to - the state to go to
+	 * @param from
+	 *            - the state to go from
+	 * @param to
+	 *            - the state to go to
 	 * 
 	 * @return the probability for the transition from state from to state to
 	 */
 	public double getTProb(State from, State to) {
-		int indexS1= -1;
-		int indexS2  = -1;
-		for (int i = 0 ; i < states.length ; i++) {
+		int indexS1 = -1;
+		int indexS2 = -1;
+		for (int i = 0; i < states.length; i++) {
 			if (states[i].equals(from)) {
 				indexS1 = i;
 			}
@@ -229,5 +235,5 @@ public class HMM {
 		}
 		return T.get(indexS1, indexS2);
 	}
-	
+
 }

@@ -21,22 +21,29 @@ public class OurLocalizer implements EstimatorInterface {
 	private Sensor sensor;
 	private HMM hmm;
 	private Matrix f; 
+	private double iterations, correctGuesses;
 
 	public OurLocalizer(int rows, int cols, int head) {
 		this.nbrOfRows = rows;
 		this.nbrOfCols = cols;
 		this.nbrOfhead = head;
 		sensor = new Sensor();
-		currentState = new State(1,1, State.NORTH, nbrOfRows, nbrOfCols); 
+		currentState = new State(0,0, State.NORTH, nbrOfRows, nbrOfCols); 
 		// start state right now (1,1) heading east
 		
 		currentRead = new Reading();
 		hmm = new HMM(this, sensor);
-		double[][] tmpF = new double[rows*cols*head][1];
-		for (int i = 0 ; i < rows*cols*head ; i++) {
-				tmpF[i][0] = 1.0/64.0;
-		}
-		f = new Matrix(tmpF);
+//		double[][] tmpF = new double[rows*cols*head][1];
+//		for (int i = 0 ; i < rows*cols*head ; i++) {
+//				tmpF[i][0] = 1.0/64.0;
+//		}
+		f = new Matrix(rows*cols*head,1);
+		f.set(0,0,0.25);
+		f.set(1,0,0.25);
+		f.set(2,0,0.25);
+		f.set(3,0,0.25);
+		iterations = 0;
+		correctGuesses = 0;
 	}
 
 	/**
@@ -94,11 +101,11 @@ public class OurLocalizer implements EstimatorInterface {
 		
 		// Get reading from sensor
 		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
-		
-		/* When the true reading dosn't show this is the reason
-		 * if (currentState.getX() == currentRead.getX() && currentState.getY() == currentRead.getY()) {
+		System.out.println("Current reading: " + currentRead.getX() + "  " + currentRead.getY());
+		/* When the true reading dosn't show this is the reason*/
+		 if (currentState.getX() == currentRead.getX() && currentState.getY() == currentRead.getY()) {
 			System.out.println("Sensor and true pos gives same");
-		}*/
+		}
 		
 		// Update f
 		Matrix O = hmm.getO(currentRead);
@@ -111,6 +118,27 @@ public class OurLocalizer implements EstimatorInterface {
 		double alpha = 1/sum;
 		newF = newF.times(alpha);
 		f = newF;
+		
+		double max = Integer.MIN_VALUE;
+		int index;
+		int xx = -1;
+		int yy = -1;
+		for( int x=0; x<nbrOfRows; x++) {
+			for( int y=0; y<nbrOfCols; y++) {
+				for (int h = 0 ; h < nbrOfhead ; h++) {
+					index = x*nbrOfRows+y*nbrOfCols*nbrOfhead+h;;
+					if (f.get(index, 0) > max) {
+						max = f.get(index, 0);
+						xx = y;
+						yy =x;
+					}
+				}
+			}
+		}
+		iterations++;
+		if (currentState.getX() == xx && currentState.getY() == yy)
+			correctGuesses++;
+		System.out.println( correctGuesses/iterations);
 	}
 
 	/**
@@ -120,8 +148,8 @@ public class OurLocalizer implements EstimatorInterface {
 	public int[] getCurrentTruePosition() {
 		int[] ret = new int[2];
 
-		ret[0] = currentState.getX();
-		ret[1] = currentState.getY();
+		ret[1] = currentState.getX();
+		ret[0] = currentState.getY();
 
 		return ret;
 	}
@@ -132,8 +160,8 @@ public class OurLocalizer implements EstimatorInterface {
 	 */
 	public int[] getCurrentReading() {
 		int[] ret = new int[2];
-		ret[0] = currentRead.getX();
-		ret[1] = currentRead.getY();
+		ret[1] = currentRead.getX();
+		ret[0] = currentRead.getY();
 		return ret;
 	}
 
@@ -144,7 +172,7 @@ public class OurLocalizer implements EstimatorInterface {
 	 */
 	public double getCurrentProb(int x, int y) {
 		double ret = 0;
-		int index = x*nbrOfCols+y*nbrOfhead;
+		int index = x*nbrOfRows+y*nbrOfCols*nbrOfhead;
 		ret += f.get(index, 0);
 		ret += f.get(index+1, 0);
 		ret += f.get(index+2, 0);
