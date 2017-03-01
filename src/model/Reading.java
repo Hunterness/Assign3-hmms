@@ -1,5 +1,10 @@
 package model;
 
+
+/**
+ * @author dat13tma, elt13hli
+ *
+ */
 public class Reading {
 
 	private int x, y, nbrS1, nbrS2;
@@ -18,12 +23,14 @@ public class Reading {
 	}
 
 	private void setNbrNeighbours(int nR, int nC) {
+		// corner
 		if ((x == 0 && y == 0) || (x == 0 && y == nC - 1) || (x == nR - 1 && y == 0) || (x == nR - 1 && y == nC - 1)) {
 			nbrS1 = 3;
 			nbrS2 = 5;
 			return;
 		}
-
+		
+		// top and bottom row
 		if ((x == 0) || (x == nR - 1)) {
 			nbrS1 = 5;
 
@@ -36,6 +43,7 @@ public class Reading {
 			return;
 		}
 
+		// first and last column
 		if ((y == 0) || (y == nC - 1)) {
 			nbrS1 = 5;
 
@@ -48,6 +56,7 @@ public class Reading {
 			return;
 		}
 
+		// second and second to last row
 		if ((x == 1) || (x == nR - 2)) {
 			nbrS1 = 8;
 
@@ -60,6 +69,7 @@ public class Reading {
 			return;
 		}
 
+		// second and second to last column
 		if ((y == 1) || (y == nC - 2)) {
 			nbrS1 = 8;
 
@@ -72,6 +82,7 @@ public class Reading {
 			return;
 		}
 
+		// middle of the matrix
 		nbrS1 = 8;
 		nbrS2 = 16;
 	}

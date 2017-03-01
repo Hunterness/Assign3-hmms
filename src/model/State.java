@@ -16,6 +16,7 @@ public class State {
 	private ArrayList<Pair> neighS1, neighS2;
 
 	public State(int row, int col, int head, int nbrRows, int nbrCols) {
+		
 		x = row;
 		y = col;
 		heading = head;
@@ -30,7 +31,7 @@ public class State {
 
 	}
 
-	private void setNeighbours(int step) {// TODO: All headings
+	private void setNeighbours(int step) {
 		if (step == 1) {
 			//one row above
 			if (x-1 >= 0){
@@ -268,6 +269,7 @@ public class State {
 		neighS2.clear();
 		setNeighbours(1);
 		setNeighbours(2);
+		
 		return true;
 	}
 
@@ -334,6 +336,13 @@ public class State {
 		return "Coordinates: (" + x + ", " + y + "), heading: " + head;
 	}
 
+	/**
+	 * Keeps hold of a coordinate in the grid.
+	 * Is used for the neighbours.
+	 * 
+	 * @author elt13hli
+	 *
+	 */
 	private class Pair {
 		int x, y;
 		public Pair(int x, int y) {

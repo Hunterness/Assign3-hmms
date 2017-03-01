@@ -2,6 +2,11 @@ package model;
 
 import Jama.Matrix;
 
+
+/**
+ * @author dat13tma, elt13hli
+ *
+ */
 public class HMM {
 
 	private static final double PROB_DONT_CHANGE_HEAD_NO_WALL = 0.7;
@@ -24,8 +29,9 @@ public class HMM {
 		int nbrStates = nRow * nCol * nHead;
 
 		sensor = sen;
+		
+		// the possible states
 		states = new State[nbrStates];
-
 		int index = 0;
 		for (int i = 0; i < nRow; i++) {
 			for (int j = 0; j < nCol; j++) {
@@ -38,10 +44,11 @@ public class HMM {
 
 		}
 
+		// The T matrix
 		double[][] tmp = makeT(nbrStates);
 		T = new Matrix(tmp);
 
-		O = new Matrix[nRow * nCol + 1];
+		// the possible readings from the sensor
 		readings = new Reading[nRow * nCol + 1];
 		index = 0;
 		for (int i = 0; i < nRow; i++) {
@@ -52,20 +59,12 @@ public class HMM {
 		}
 		readings[index] = new Reading();
 
-		index = 0;
-		for (int i = 0; i < nRow; i++) {
-			for (int j = 0; j < nCol; j++) {
-				O[index] = makeO(nbrStates, index, nRow, nCol);
-				index++;
-			}
+		// the O matrices
+		int size = nRow * nCol + 1;
+		O = new Matrix[size];
+		for (int i = 0; i < size; i++) {
+			O[i] = makeO(nbrStates, i, nRow, nCol);
 		}
-		double[][] empty = new double[nbrStates][nbrStates];
-		State s;
-		for (int i = 0; i < nbrStates; i++) {
-			s = states[i];
-			empty[i][i] = sensor.getProbability(-1, -1, s.getX(), s.getY(), s.getNbrNeighbours(1), s.getNbrNeighbours(2));
-		}
-		O[O.length-1] = new Matrix(empty);
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
@@ -126,7 +125,7 @@ public class HMM {
 						} else {
 							ProbabilityForMove = PROB_CHANGE_HEAD_WALL / nbrPoss;
 							// nbrPoss should be more then 0 since at least one
-							// move possible (this)
+							// move possible (this one)
 						}
 					} else {
 						if (to.getHeading() == from.getHeading()) {
@@ -134,7 +133,7 @@ public class HMM {
 						} else {
 							ProbabilityForMove = PROB_CHANGE_HEAD_NO_WALL / (nbrPoss - 1);
 							// nbrPoss should be more then 0 since at least one
-							// move possible (this)
+							// move possible (this one)
 							// -1 since have to change heading and not changing
 							// is allowed
 						}
@@ -150,6 +149,12 @@ public class HMM {
 		return T;
 	}
 	
+	/**
+	 * Gives back the O matrix for the given reading
+	 * 
+	 * @param r - the current reading from the sensor
+	 * @return the O matrix for the reading r
+	 */
 	public Matrix getO(Reading r) {
 		if (r.getX() == -1 && r.getY() == -1)
 			return O[O.length-1];
@@ -158,18 +163,35 @@ public class HMM {
 			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
 				index = i;
 				break;
-			}
+			} // will always change sine readings contain all possible readings
 		}
 		return O[index];
 	}
 	
+	/**
+	 * @return the T matrix
+	 */
 	public Matrix getT() {
 		return T;
 	}
 	
-	public double getOrXY(Reading r, int x, int y)  { // TODO Correct?
-		if (r.getX() == -1 && r.getY() == -1)
+	/**
+	 * Returns the probability entry of the sensor matrices O to get reading r when actually in position (x,y).
+	 * If rX or rY (or both) are -1 the method return the probability for the sensor 
+	 * to return "nothing" given the robot is in position (x, y)
+	 * 
+	 * @param r - the reading
+	 * @param x - the x-coordinate
+	 * @param y - the y-coordinate
+	 * 
+	 * @return the probability to get r when in (x,y) 
+	 * 			or the probability for "nothing" for (x,y)
+	 * 			if either (or both) coordinates of r is -1
+	 */
+	public double getOrXY(Reading r, int x, int y)  {
+		if (r.getX() == -1 || r.getY() == -1)
 			return O[O.length-1].get(x, y);
+		
 		int indexReadingState = -1;
 		int indexTrueState  = -1;
 		for (int i = 0 ; i < readings.length ; i++) {
@@ -184,23 +206,28 @@ public class HMM {
 		return o.get(indexTrueState*nHead, indexTrueState*nHead);
 	}
 	
-	public double getTProb(State s1, State s2) {
+	/**
+	 * Gives the probability entry of the transition matrix T for
+	 * going from state from to state to
+	 * 
+	 * @param from - the state to go from
+	 * @param to - the state to go to
+	 * 
+	 * @return the probability for the transition from state from to state to
+	 */
+	public double getTProb(State from, State to) {
 		int indexS1= -1;
 		int indexS2  = -1;
 		for (int i = 0 ; i < states.length ; i++) {
-			if (states[i].equals(s1)) {
+			if (states[i].equals(from)) {
 				indexS1 = i;
 			}
-			if (states[i].equals(s2)) {
+			if (states[i].equals(to)) {
 				indexS2 = i;
 			}
+			// will change both index since all possible states is in states
 		}
 		return T.get(indexS1, indexS2);
 	}
 	
-//	public static void main(String[] args) {
-//		// Test main
-//		HMM h = new HMM(new OurLocalizer(4, 4, 4), new Sensor());
-//		System.out.println(h.getTProb(new State(0,0,State.NORTH,4,4), new State(1,0,State.SOUTH,4,4)));
-//	}
 }

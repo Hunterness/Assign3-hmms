@@ -20,20 +20,16 @@ public class OurLocalizer implements EstimatorInterface {
 	private Reading currentRead;
 	private Sensor sensor;
 	private HMM hmm;
-	private Matrix f;
+	private Matrix f; 
 
 	public OurLocalizer(int rows, int cols, int head) {
 		this.nbrOfRows = rows;
 		this.nbrOfCols = cols;
 		this.nbrOfhead = head;
 		sensor = new Sensor();
-		currentState = new State(0, 0, State.NORTH, nbrOfRows, nbrOfCols); // start
-																			// state
-																			// right
-																			// now
-																			// (1,1)
-																			// heading
-																			// east
+		currentState = new State(1,1, State.NORTH, nbrOfRows, nbrOfCols); 
+		// start state right now (1,1) heading east
+		
 		currentRead = new Reading();
 		hmm = new HMM(this, sensor);
 		double[][] tmpF = new double[rows*cols*head][1];
@@ -41,11 +37,6 @@ public class OurLocalizer implements EstimatorInterface {
 				tmpF[i][0] = 1.0/64.0;
 		}
 		f = new Matrix(tmpF);
-//		f = new Matrix(rows*cols*head,1,0);
-//		f.set(0, 0, 0.25);
-//		f.set(1, 0, 0.25);
-//		f.set(2, 0, 0.25);
-//		f.set(3, 0, 0.25);
 	}
 
 	/**
@@ -63,26 +54,30 @@ public class OurLocalizer implements EstimatorInterface {
 	}
 
 	/**
-	 * @return the number of possible headings for the grid a number of four
-	 *         headings makes obviously most sense... the viewer can handle four
-	 *         headings at maximum in a useful way.
+	 * @return the number of possible headings for the grid
 	 */
 	public int getNumHead() {
+		// a number of four headings makes obviously most sense... 
+		// the viewer can handle four headings at maximum in a useful way.
 		return nbrOfhead;
 	}
 
 	/**
-	 * Triggers one step of the estimation, i.e., true position, sensor reading
-	 * and the probability distribution for the position estimate are updated
-	 * one step after one method call.
+	 * Triggers one step of the estimation
+	 * 
+	 * i.e., true position, sensor reading and the probability distribution 
+	 * for the position estimate are updated one step after one method call.
 	 */
-	public void update() { // TODO
+	public void update() {
 		// Update State
-		int[] heads = currentState.allowedHeadings();
 		double p = Math.random();
-		if (heads[currentState.getHeading()] != -1 && p >= 0.3) {
-			currentState.updateState(currentState.getHeading());
+		if (!currentState.faceWall() && p >= 0.3) { //heads[currentState.getHeading()] != -1 borde iaf vara !faceWall()
+			boolean b = currentState.updateState(currentState.getHeading());
+			if (!b){
+				System.out.println("Could not update state.");
+			}
 		} else {
+			int[] heads = currentState.allowedHeadings();
 			ArrayList<Integer> posIndexes = new ArrayList<Integer>();
 			for (int i = 0 ; i < heads.length ; i++) {
 				if (heads[i] != -1) {
@@ -91,10 +86,20 @@ public class OurLocalizer implements EstimatorInterface {
 			}
 			Random rand = new Random();
 			int i = rand.nextInt(posIndexes.size());
-			currentState.updateState(heads[posIndexes.get(i)]);
+			boolean b = currentState.updateState(heads[posIndexes.get(i)]);
+			if (!b){
+				System.out.println("Could not update state.");
+			}
 		}
+		
 		// Get reading from sensor
 		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
+		
+		/* When the true reading dosn't show this is the reason
+		 * if (currentState.getX() == currentRead.getX() && currentState.getY() == currentRead.getY()) {
+			System.out.println("Sensor and true pos gives same");
+		}*/
+		
 		// Update f
 		Matrix O = hmm.getO(currentRead);
 		Matrix T = hmm.getT().transpose();
@@ -125,7 +130,7 @@ public class OurLocalizer implements EstimatorInterface {
 	 * @return the currently available sensor reading obtained for the true
 	 *         position after the simulation step
 	 */
-	public int[] getCurrentReading() { // TODO
+	public int[] getCurrentReading() {
 		int[] ret = new int[2];
 		ret[0] = currentRead.getX();
 		ret[1] = currentRead.getY();
@@ -137,12 +142,13 @@ public class OurLocalizer implements EstimatorInterface {
 	 *         in position (x,y) in the grid. The different headings are not
 	 *         considered, as it makes the view somewhat unclear.
 	 */
-	public double getCurrentProb(int x, int y) { // TODO
+	public double getCurrentProb(int x, int y) {
 		double ret = 0;
-		ret += f.get(x*nbrOfCols+y*nbrOfhead, 0);
-		ret += f.get(x*nbrOfCols+y*nbrOfhead+1, 0);
-		ret += f.get(x*nbrOfCols+y*nbrOfhead+2, 0);
-		ret += f.get(x*nbrOfCols+y*nbrOfhead+3, 0);
+		int index = x*nbrOfCols+y*nbrOfhead;
+		ret += f.get(index, 0);
+		ret += f.get(index+1, 0);
+		ret += f.get(index+2, 0);
+		ret += f.get(index+3, 0);
 		return ret;
 	}
 
@@ -167,11 +173,13 @@ public class OurLocalizer implements EstimatorInterface {
 	 *         pose i = (x, y, h) to pose j = (nX, nY, nH)
 	 */
 	public double getTProb(int x, int y, int h, int nX, int nY, int nH) {
-		nH = (nH+3)%nbrOfhead; //WTF??????
+		// since we start in East and the visualisation on North
+		nH = (nH+3)%nbrOfhead;
 		h = (h+3)%nbrOfhead;
-		State s1 = new State(x,y,h, nbrOfRows, nbrOfCols);
-		State s2 = new State(nX,nY,nH, nbrOfRows, nbrOfCols);
-		return hmm.getTProb(s1, s2);
+		
+		State from = new State(x,y,h, nbrOfRows, nbrOfCols);
+		State to = new State(nX,nY,nH, nbrOfRows, nbrOfCols);
+		return hmm.getTProb(from, to);
 	}
 
 }
