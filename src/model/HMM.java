@@ -8,10 +8,10 @@ import Jama.Matrix;
  */
 public class HMM {
 
-	private static final double PROB_DONT_CHANGE_HEAD_NO_WALL = 0.7;
-	private static final double PROB_CHANGE_HEAD_NO_WALL = 0.3;
-	private static final double PROB_DONT_CHANGE_HEAD_WALL = 0;
-	private static final double PROB_CHANGE_HEAD_WALL = 1;
+	public static final double PROB_DONT_CHANGE_HEAD_NO_WALL = 0.7;
+	public static final double PROB_CHANGE_HEAD_NO_WALL = 0.3;
+	public static final double PROB_DONT_CHANGE_HEAD_WALL = 0;
+	public static final double PROB_CHANGE_HEAD_WALL = 1;
 
 	private Matrix T;
 	private Matrix[] O;
@@ -98,6 +98,7 @@ public class HMM {
 	}
 
 	private double[][] makeT(int nbrStates) {
+		// will always move one step and can only move straight.
 		double[][] T = new double[nbrStates][nbrStates];
 
 		for (int i = 0; i < nbrStates; i++) {
@@ -144,7 +145,6 @@ public class HMM {
 					T[i][j] = 0;
 				}
 			}
-			// will always move one step and can only move straight.
 		}
 		return T;
 	}
@@ -154,6 +154,7 @@ public class HMM {
 	 * 
 	 * @param r
 	 *            - the current reading from the sensor
+	 *            
 	 * @return the O matrix for the reading r
 	 */
 	public Matrix getO(Reading r) {
@@ -164,7 +165,7 @@ public class HMM {
 			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
 				index = i;
 				break;
-			} // will always change sine readings contain all possible readings
+			} // will always change since readings contain all possible readings
 		}
 		return O[index];
 	}
@@ -231,7 +232,7 @@ public class HMM {
 			if (states[i].equals(to)) {
 				indexS2 = i;
 			}
-			// will change both index since all possible states is in states
+			// will change both indexes since all possible states is in states
 		}
 		return T.get(indexS1, indexS2);
 	}

@@ -115,14 +115,14 @@ public class Reading {
 	}
 
 	/**
-	 * @return the number of step 1 neighbours
+	 * @return the number of 1 step away neighbours
 	 */
 	public int getNbrS1() {
 		return nbrS1;
 	}
 
 	/**
-	 * @return the number of step 2 neighbours
+	 * @return the number of 2 step away neighbours
 	 */
 	public int getNbrS2() {
 		return nbrS2;

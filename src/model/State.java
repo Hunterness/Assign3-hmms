@@ -151,6 +151,7 @@ public class State {
 	 * 
 	 * @param step
 	 *            - the step: 1 or 2
+	 *            
 	 * @return the number of step away neighbours
 	 */
 	public int getNbrNeighbours(int step) {
@@ -162,10 +163,15 @@ public class State {
 	}
 
 	/**
-	 * Returns a list of neighbours the number step away
+	 * Returns a list of neighbours the number step away.
+	 * 
+	 * Should probably be in Reading class instead, since 
+	 * it doen't care for headings but is all surrounding
+	 * squares.
 	 * 
 	 * @param step
 	 *            - the step: 1 or 2
+	 *            
 	 * @return a list of neighbouring states
 	 */
 	public Reading[] getNeighbours(int step) {
@@ -261,7 +267,8 @@ public class State {
 			x -= 1;
 			break;
 		default:
-			return false; // not needed since assumed one of values above
+			// not needed since assumed one of values above
+			return false;
 		}
 
 		heading = head;

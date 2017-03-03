@@ -26,17 +26,14 @@ public class OurLocalizer implements EstimatorInterface {
 	public OurLocalizer(int rows, int cols, int head) {
 		this.nbrOfRows = rows;
 		this.nbrOfCols = cols;
-		this.nbrOfhead = head;
+		this.nbrOfhead = head; // hopefully this is 4
 		sensor = new Sensor();
 		currentState = new State(0,0, State.NORTH, nbrOfRows, nbrOfCols); 
-		// start state right now (1,1) heading east
+		// start state right now (0,0) heading north
 		
 		currentRead = new Reading();
 		hmm = new HMM(this, sensor);
-//		double[][] tmpF = new double[rows*cols*head][1];
-//		for (int i = 0 ; i < rows*cols*head ; i++) {
-//				tmpF[i][0] = 1.0/64.0;
-//		}
+
 		f = new Matrix(rows*cols*head,1);
 		f.set(0,0,0.25);
 		f.set(1,0,0.25);
@@ -78,7 +75,7 @@ public class OurLocalizer implements EstimatorInterface {
 	public void update() {
 		// Update State
 		double p = Math.random();
-		if (!currentState.faceWall() && p >= 0.3) { //heads[currentState.getHeading()] != -1 borde iaf vara !faceWall()
+		if (!currentState.faceWall() && p >= (1 - HMM.PROB_DONT_CHANGE_HEAD_NO_WALL)) {
 			boolean b = currentState.updateState(currentState.getHeading());
 			if (!b){
 				System.out.println("Could not update state.");
@@ -101,11 +98,7 @@ public class OurLocalizer implements EstimatorInterface {
 		
 		// Get reading from sensor
 		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
-		System.out.println("Current reading: " + currentRead.getX() + "  " + currentRead.getY());
-		/* When the true reading dosn't show this is the reason*/
-		 if (currentState.getX() == currentRead.getX() && currentState.getY() == currentRead.getY()) {
-			System.out.println("Sensor and true pos gives same");
-		}
+		//System.out.println("Current reading: " + currentRead.getX() + "  " + currentRead.getY());
 		
 		// Update f
 		Matrix O = hmm.getO(currentRead);
@@ -138,14 +131,14 @@ public class OurLocalizer implements EstimatorInterface {
 		iterations++;
 		if (currentState.getX() == xx && currentState.getY() == yy)
 			correctGuesses++;
-		System.out.println( correctGuesses/iterations);
+		//System.out.println( correctGuesses/iterations);
 	}
 
 	/**
 	 * @return the currently known true position i.e., after one simulation step
 	 *         of the robot as (x,y)-pair.
 	 */
-	public int[] getCurrentTruePosition() {
+	public int[] getCurrentTruePosition() { // our x is viewers y
 		int[] ret = new int[2];
 
 		ret[1] = currentState.getX();
@@ -158,10 +151,12 @@ public class OurLocalizer implements EstimatorInterface {
 	 * @return the currently available sensor reading obtained for the true
 	 *         position after the simulation step
 	 */
-	public int[] getCurrentReading() {
+	public int[] getCurrentReading() { // our x is viewers y
 		int[] ret = new int[2];
+		
 		ret[1] = currentRead.getX();
 		ret[0] = currentRead.getY();
+		
 		return ret;
 	}
 
@@ -173,10 +168,12 @@ public class OurLocalizer implements EstimatorInterface {
 	public double getCurrentProb(int x, int y) {
 		double ret = 0;
 		int index = x*nbrOfRows+y*nbrOfCols*nbrOfhead;
+		
 		ret += f.get(index, 0);
 		ret += f.get(index+1, 0);
 		ret += f.get(index+2, 0);
 		ret += f.get(index+3, 0);
+		
 		return ret;
 	}
 

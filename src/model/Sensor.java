@@ -9,7 +9,7 @@ import java.util.Random;
 public class Sensor {
 	private final double probabilityCorrect = 0.1, probabilityS1 = 0.05, probabilityS2 = 0.025;
 
-	public Sensor() { }
+	public Sensor() {}
 
 	/**
 	 * Returns the probability for the sensor giving position (rX,rY) when the
