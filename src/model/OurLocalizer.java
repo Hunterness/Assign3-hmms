@@ -34,6 +34,7 @@ public class OurLocalizer implements EstimatorInterface {
 		currentRead = new Reading();
 		hmm = new HMM(this, sensor);
 
+		// forward filtering matrix
 		f = new Matrix(rows*cols*head,1);
 		f.set(0,0,0.25);
 		f.set(1,0,0.25);
@@ -100,7 +101,7 @@ public class OurLocalizer implements EstimatorInterface {
 		currentRead = sensor.getNewReading(currentState, nbrOfRows, nbrOfCols);
 		//System.out.println("Current reading: " + currentRead.getX() + "  " + currentRead.getY());
 		
-		// Update f
+		// Update f: forward filtering matrix
 		Matrix O = hmm.getO(currentRead);
 		Matrix T = hmm.getT().transpose();
 		Matrix newF = O.times(T).times(f);
