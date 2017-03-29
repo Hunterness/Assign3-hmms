@@ -194,9 +194,11 @@ public class HMM {
 	 *         "nothing" for (x,y) if either (or both) coordinates of r is -1
 	 */
 	public double getOrXY(Reading r, int x, int y) {
-		if (r.getX() == -1 || r.getY() == -1)
-			return O[O.length - 1].get(x, y);
-
+		Matrix o;
+		if (r.getX() == -1 || r.getY() == -1){
+			// probability for nothing, assumes nothing is same everywhere
+			return O[O.length - 1].get(0, 0);  
+		}
 		int indexReadingState = -1;
 		int indexTrueState = -1;
 		for (int i = 0; i < readings.length; i++) {
@@ -207,7 +209,7 @@ public class HMM {
 				indexReadingState = i;
 			}
 		}
-		Matrix o = O[indexReadingState];
+		o = O[indexReadingState];
 		return o.get(indexTrueState * nHead, indexTrueState * nHead);
 	}
 

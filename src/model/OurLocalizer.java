@@ -113,8 +113,14 @@ public class OurLocalizer implements EstimatorInterface {
 		}
 		double alpha = 1 / sum;
 		newF = newF.times(alpha);
+		
+		
 		f = newF;
 
+		for (int x = 0; x < f.getRowDimension(); x++)
+			System.out.println(f.get(x, 0) + "\t");
+		System.out.println();
+		
 		double max = Integer.MIN_VALUE;
 		int xx = -1;
 		int yy = -1;
@@ -125,8 +131,8 @@ public class OurLocalizer implements EstimatorInterface {
 					xx = y;
 					yy = x;
 				}
-
 			}
+			
 		}
 		iterations++;
 		if (currentState.getX() == xx && currentState.getY() == yy) {
@@ -134,10 +140,10 @@ public class OurLocalizer implements EstimatorInterface {
 		}
 		manDist += Math.abs(currentState.getX() - xx) + Math.abs(currentState.getY() - yy);
 //		System.out.println( correctGuesses/iterations);
-		System.out.println(manDist/iterations);
+//		System.out.println(manDist/iterations);
 //		System.out.println(currentState.getY() + "  " + currentState.getX() + "       " + yy + "  " + xx);
 //		System.out.println((currentState.getY() - yy) + "  " + (currentState.getX() - xx));
-		System.out.println();
+//		System.out.println();
 	}
 
 	/**
@@ -173,7 +179,7 @@ public class OurLocalizer implements EstimatorInterface {
 	 */
 	public double getCurrentProb(int x, int y) {
 		double ret = 0;
-		int index = x * nbrOfRows + y * nbrOfCols * nbrOfhead;
+		int index = x * nbrOfRows * nbrOfhead + y * nbrOfCols;
 
 		ret += f.get(index, 0);
 		ret += f.get(index + 1, 0);

@@ -23,6 +23,13 @@ public class Reading {
 	}
 
 	private void setNbrNeighbours(int nR, int nC) {
+		//nothing
+		if (x == -1 || y == -1){
+			nbrS1 = 0;
+			nbrS2 = 0;
+			return;
+		}
+		
 		// corner
 		if ((x == 0 && y == 0) || (x == 0 && y == nC - 1) || (x == nR - 1 && y == 0) || (x == nR - 1 && y == nC - 1)) {
 			nbrS1 = 3;
