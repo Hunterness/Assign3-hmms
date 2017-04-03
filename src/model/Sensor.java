@@ -9,7 +9,8 @@ import java.util.Random;
 public class Sensor {
 	private final double probabilityCorrect = 0.1, probabilityS1 = 0.05, probabilityS2 = 0.025;
 
-	public Sensor() {}
+	public Sensor() {
+	}
 
 	/**
 	 * Returns the probability for the sensor giving position (rX,rY) when the
@@ -28,9 +29,9 @@ public class Sensor {
 	 * @param nbrS1
 	 *            - number of positions one step from (x,y) ∈ {3,5,8}
 	 * @param nbrS2
-	 *            - number of positions two steps from (x,y) ∈ {5, 6, 7, 9, 11,
-	 *            16}
-	 *            
+	 *            - number of positions two steps from (x,y) ∈ {5, 6, 7, 9,
+	 *            11, 16}
+	 * 
 	 * @return the probability of the sensor for the position (rX, rY) when
 	 *         actually in position (x, y)
 	 */
@@ -76,27 +77,33 @@ public class Sensor {
 	 */
 
 	public Reading getNewReading(State currState, int nbrOfRows, int nbrOfCols) {
-		Reading[] ns1 = currState.getNeighbours(1);
-		Reading[] ns2 = currState.getNeighbours(2);
-		double pL = probabilityCorrect;
-		double pNs1 = pL + ns1.length * probabilityS1;
-		double pNs2 = pL + pNs1 + ns2.length * probabilityS2;
 		double p = Math.random();
-		State nextState;
-		if (p <= pL) {
-			nextState = currState;
-			return new Reading(nextState.getX(), nextState.getY(), nbrOfRows, nbrOfCols);
-		} else if (p <= pNs1) {
-			Random rand = new Random();
-			int index = rand.nextInt(ns1.length);
-			return ns1[index];
-		} else if (p <= pNs2) {
-			Random rand = new Random();
-			int index = rand.nextInt(ns2.length);
-			return ns2[index];
-		} else {
-			return new Reading();
+		double prob = probabilityCorrect;
+
+		if (p <= prob) {
+			return new Reading(currState.getX(), currState.getY(), nbrOfRows, nbrOfCols);
 		}
+
+		Reading[] ns1 = currState.getNeighbours(1);
+		int nbrNeigh1 = ns1.length;
+		for (int i = 0; i < nbrNeigh1; i++) {
+			prob += probabilityS1;
+			if (p <= prob) {
+				return ns1[i];
+			}
+		}
+
+		Reading[] ns2 = currState.getNeighbours(2);
+		int nbrNeigh2 = ns2.length;
+		for (int i = 0; i < nbrNeigh2; i++) {
+			prob += probabilityS2;
+			if (p <= prob) {
+				return ns2[i];
+			}
+		}
+
+		return new Reading();
+
 	}
 
 }

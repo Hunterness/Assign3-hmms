@@ -194,9 +194,18 @@ public class HMM {
 	 *         "nothing" for (x,y) if either (or both) coordinates of r is -1
 	 */
 	public double getOrXY(Reading r, int x, int y) {
-		if (r.getX() == -1 || r.getY() == -1)
-			return O[O.length - 1].get(x, y);
+		Matrix o;
+		if (r.getX() == -1 || r.getY() == -1) {
+			// probability for nothing
+			int indexTrueState = -1;
+			for (int i = 0; i < readings.length; i++) {
+				if (readings[i].getX() == x && readings[i].getY() == y) {
+					indexTrueState = i;
+				}
+			}
 
+			return O[O.length - 1].get(indexTrueState * nHead, indexTrueState * nHead);
+		}
 		int indexReadingState = -1;
 		int indexTrueState = -1;
 		for (int i = 0; i < readings.length; i++) {
@@ -207,9 +216,9 @@ public class HMM {
 				indexReadingState = i;
 			}
 		}
-		Matrix o = O[indexReadingState];
+		o = O[indexReadingState];
 		return o.get(indexTrueState * nHead, indexTrueState * nHead);
-	}
+}
 
 	/**
 	 * Gives the probability entry of the transition matrix T for going from
