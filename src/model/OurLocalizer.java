@@ -106,7 +106,8 @@ public class OurLocalizer implements EstimatorInterface {
 		// Update f: forward filtering matrix
 		Matrix O = hmm.getO(currentRead);
 		Matrix T = hmm.getT().transpose();
-		Matrix newF = O.times(T).times(f);
+		Matrix newF = O.times(T);
+		newF = newF.times(f);
 		double sum = 0;
 		for (int i = 0; i < newF.getRowDimension(); i++) {
 			sum += newF.get(i, 0);
@@ -117,8 +118,10 @@ public class OurLocalizer implements EstimatorInterface {
 		
 		f = newF;
 
-		for (int x = 0; x < f.getRowDimension(); x++)
-			System.out.println(f.get(x, 0) + "\t");
+		for (int x = 0; x < f.getRowDimension(); x+=4){
+			double print = f.get(x, 0)+f.get(x+1, 0)+f.get(x+2, 0)+f.get(x+3, 0);
+			System.out.println(print);
+		}
 		System.out.println();
 		
 		double max = Integer.MIN_VALUE;

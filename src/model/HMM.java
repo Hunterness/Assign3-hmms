@@ -65,6 +65,11 @@ public class HMM {
 			O[i] = makeO(nbrStates, i, nRow, nCol);
 		}
 
+		
+//		for (int i = 0; i < O[size - 1].getRowDimension(); i += 4) {
+//			System.out.println(O[size - 1].get(i, i));
+//		}
+
 	}
 
 	private Matrix makeO(int nbrStates, int index, int nR, int nC) {
@@ -84,14 +89,15 @@ public class HMM {
 				prob = sensor.getProbability(-1, -1, s.getX(), s.getY(), nbrS1, nbrS2);
 
 			} else {
-				prob = sensor.getProbability(s.getX(), s.getY(), r.getX(), r.getY(), r.getNbrS1(), r.getNbrS2());
+				prob = sensor.getProbability(r.getX(), r.getY(), s.getX(), s.getY(), s.getNbrNeighbours(1),
+						s.getNbrNeighbours(2));
 			}
 
 			O[i][i] = prob;
 			O[i + 1][i + 1] = prob;
 			O[i + 2][i + 2] = prob;
 			O[i + 3][i + 3] = prob;
-
+			// System.out.println(r + ", " + s + ": " + prob);
 		}
 		Matrix ret = new Matrix(O);
 		return ret;
@@ -154,12 +160,13 @@ public class HMM {
 	 * 
 	 * @param r
 	 *            - the current reading from the sensor
-	 *            
+	 * 
 	 * @return the O matrix for the reading r
 	 */
 	public Matrix getO(Reading r) {
-		if (r.getX() == -1 && r.getY() == -1)
+		if (r.getX() == -1 && r.getY() == -1) {
 			return O[O.length - 1];
+		}
 		int index = -1;
 		for (int i = 0; i < readings.length; i++) {
 			if (readings[i].getX() == r.getX() && readings[i].getY() == r.getY()) {
@@ -195,9 +202,16 @@ public class HMM {
 	 */
 	public double getOrXY(Reading r, int x, int y) {
 		Matrix o;
-		if (r.getX() == -1 || r.getY() == -1){
-			// probability for nothing, assumes nothing is same everywhere
-			return O[O.length - 1].get(0, 0);  
+		if (r.getX() == -1 || r.getY() == -1) {
+			// probability for nothing
+			int indexTrueState = -1;
+			for (int i = 0; i < readings.length; i++) {
+				if (readings[i].getX() == x && readings[i].getY() == y) {
+					indexTrueState = i;
+				}
+			}
+
+			return O[O.length - 1].get(indexTrueState * nHead, indexTrueState * nHead);
 		}
 		int indexReadingState = -1;
 		int indexTrueState = -1;

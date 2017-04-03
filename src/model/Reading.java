@@ -135,4 +135,8 @@ public class Reading {
 		return nbrS2;
 	}
 
+	public String toString() {
+		return "Coordinates: (" + x + ", " + y + "), nbrNeigh1: " + nbrS1 + ", nbrNeigh2: " + nbrS2;
+	}
+	
 }
