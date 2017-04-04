@@ -1,6 +1,6 @@
 .classpath
 .metadata
-bin/
+bin/*
 tmp/
 *.tmp
 *.bak
@@ -28,4 +28,3 @@ local.properties
 
 # Code Recommenders
 .recommenders/
-

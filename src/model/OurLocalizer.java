@@ -39,7 +39,7 @@ public class OurLocalizer implements EstimatorInterface {
 		Reading r = new Reading(0,0,4,4);
 		Matrix o = hmm.getO(r);
 		for (int i = 0 ; i < o.getColumnDimension(); i+=4) {
-			System.out.println(o.get(i, i));
+			//System.out.println(o.get(i, i));
 			f.set(i, 0, o.get(i, i));
 		}
 		manDist = 0;
@@ -133,11 +133,11 @@ public class OurLocalizer implements EstimatorInterface {
 			correctGuesses++;
 		}
 		manDist += Math.abs(currentState.getX() - xx) + Math.abs(currentState.getY() - yy);
-		System.out.println( correctGuesses/iterations);
+//		System.out.println( correctGuesses/iterations);
 //		System.out.println(manDist/iterations);
 //		System.out.println(currentState.getY() + "  " + currentState.getX() + "       " + yy + "  " + xx);
 //		System.out.println((currentState.getY() - yy) + "  " + (currentState.getX() - xx));
-		System.out.println();
+//		System.out.println();
 	}
 
 	/**
